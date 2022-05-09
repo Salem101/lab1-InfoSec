@@ -34,7 +34,7 @@ class ABFile():
 
 
   def writeat(self,data,offset):
-    if data[0] == 'S' and data[-1] == 'E':
+    if data[0] == 'S' and data[:-1] == 'E':
         raw_data = self.data
         r=''
         if (len(data) <len(raw_data)): 
