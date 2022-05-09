@@ -54,7 +54,7 @@ class ABFile():
     self.Afile.close()
     self.Bfile.close()
     size = len(test_data)
-    if(test_date[0] == 'S' and test_data[size-1} == 'E'): 
+    if(test_date[0] == 'S' and test_data[size-1] == 'E'): 
         self.Afile.writeat(test_data,0)
     else: 
         self.Bfile_new = openfile(self.Bfn, True)
@@ -71,9 +71,6 @@ class ABFile():
 
 def ABopenfile(filename, create):
   return ABFile(filename,create)
-
-
-
 
 # The code here sets up type checking and variable hiding for you.  You
 # should not need to change anything below here.
