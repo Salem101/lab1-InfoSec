@@ -38,7 +38,7 @@ class ABFile():
             self.Bfile = openfile(self.Bfn, create)
             self.Afile.writeat('SE', 0)
             self.Bfile.writeat('SE', 0)
-      mycontext['myLock'].release()
+      #mycontext['myLock'].release()
         else: 
             self.Afile = openfile(self.Afn, False)
             self.Bfile = openfile(self.Bfn, False)
@@ -49,26 +49,26 @@ class ABFile():
 
 
   def writeat(self,data,offset):
-    if data[0] == 'S' and data[:-1] == 'E':
-        raw_data = self.data
-        r=''
-        if (len(data) <len(raw_data)): 
-            r= ' ' * len(raw_data) - len(data))
-        self.valid = True
-        self.data = data
-        self.Bfile.writeat(data + r, offset)
-    else: 
-        self.Bfile.writeat(' ' * len(self.data), offset)
+    #if data[0] == 'S' and data[:-1] == 'E':
+    #    raw_data = self.data
+    #    r=''
+    #    if (len(data) <len(raw_data)): 
+    #        r= ' ' * len(raw_data) - len(data))
+    #    self.valid = True
+    #    self.data = data
+    #    self.Bfile.writeat(data + r, offset)
+    #else: 
+    #    self.Bfile.writeat(' ' * len(self.data), offset)
     # Write the requested data to the B file using the sandbox's writeat call
     self.Bfile.writeat(data, offset)
   
   def readat(self,bytes,offset):
     # Read from the A file using the sandbox's readat...
-    input_file = self.Afile.readat(bytes, offset)
-    if input_file[0] == 'S' and input_file[-1] == 'E': 
-        self.valid = True
-    else: 
-        self.valid = False
+    #input_file = self.Afile.readat(bytes, offset)
+    #if input_file[0] == 'S' and input_file[-1] == 'E': 
+    #    self.valid = True
+    #else: 
+    #    self.valid = False
     return self.Afile.readat(bytes,offset)
 
   def close(self):
