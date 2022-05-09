@@ -21,12 +21,12 @@ class ABFile():
     #initialize
   def __init__(self,filename,create): 
     # globals
-    mycontext['myLock'] = createlock()
+    #mycontext['myLock'] = createlock()
     mycontext['debug'] = False   
     # local (per object) reference to the underlying file
     self.Afn = filename+'.a'
     self.Bfn = filename+'.b'
-    mycontext['myLock'].acquire(True)
+    #mycontext['myLock'].acquire(True)
     self.valid = False
     self.data = ''
   
@@ -63,15 +63,25 @@ class ABFile():
     return self.Afile.readat(bytes,offset)
 
   def close(self):
-    if self.valid == True: 
-        self.Afile.writeat(self.data, 0)
-        self.Afile.close()
-        mycontext['myLock'].release()
-        #discard textfile.txt.b after write
-        self.Bfile.writeat(' ' * len(self.data), 0)
-        self.Bfile.close()
-        mycontext['myLock'].release()
-
+    #if self.valid == True: 
+    #    self.Afile.writeat(self.data, 0)
+    #    self.Afile.close()
+    #    mycontext['myLock'].release()
+    #    #discard textfile.txt.b after write
+    #    self.Bfile.writeat(' ' * len(self.data), 0)
+    #    self.Bfile.close()
+    #    mycontext['myLock'].release()
+    file = self.Bfile.readat(None, 0)
+    data = len(file)
+    first_char = file[0]
+    last_char = file[-1]
+    
+    try: 
+        if first_char == 'S' and last_char == 'E': 
+            self.Afile.writeat(file, 0)
+            self.Bfile.close()
+        else: 
+            self.Bfile.close()
 
 def ABopenfile(filename, create):
   return ABFile(filename,create)
