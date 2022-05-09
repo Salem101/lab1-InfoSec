@@ -24,7 +24,8 @@ class ABFile():
     # local (per object) reference to the underlying file
     self.Afn = filename+'.a'
     self.Bfn = filename+'.b'
-    self.temp_file = filename
+    self.valid = False
+    self.data = ''
 
     # make the files and add 'SE' to the readat file...
     if create:
