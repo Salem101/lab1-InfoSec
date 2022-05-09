@@ -33,10 +33,19 @@ class ABFile():
 
     # make the files and add 'SE' to the readat file...
     if create:
-      self.Afile = openfile(self.Afn, create)
-      self.Bfile = openfile(self.Bfn, create)
-      self.Afile.writeat('SE', 0)
+        if self.Afn not in listfiles() and self.Bfn not in listfiles():         
+            self.Afile = openfile(self.Afn, create)
+            self.Bfile = openfile(self.Bfn, create)
+            self.Afile.writeat('SE', 0)
+            self.Bfile.writeat('SE', 0)
       mycontext['myLock'].release()
+        else: 
+            self.Afile = openfile(self.Afn, False)
+            self.Bfile = openfile(self.Bfn, False)
+    else: 
+        if self.Afn in listfiles() and self.Bfn in listfiles(): 
+            self.Afile = openfile(self.Afn, False)
+            self.Bfile = openfile(self.Bfn, False)
 
 
   def writeat(self,data,offset):
