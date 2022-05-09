@@ -65,6 +65,7 @@ class ABFile():
     if self.valid == True: 
         self.Afile.writeat(self.data, 0)
         self.Afile.close()
+        mycontext['myLock'].release()
         #discard textfile.txt.b after write
         self.Bfile.writeat(' ' * len(self.data), 0)
         self.Bfile.close()
