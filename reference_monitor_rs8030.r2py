@@ -27,28 +27,31 @@ class ABFile():
     self.Afn = filename+'.a'
     self.Bfn = filename+'.b'
     #mycontext['myLock'].acquire(True)
-    self.valid = False
-    self.data = ''
+    #self.valid = False
+    #self.data = ''
   
-
+    self.Lock= createLock()
+    self.Lock.acquire(True)
+    if self.Afn in listfiles():
+        removefile(self.Afn)
+    if self.Bfn in listfiles(): 
+        removefile(self.Bfn)
+        
+        
     # make the files and add 'SE' to the readat file...
     if create:
-        if self.Afn not in listfiles() and self.Bfn not in listfiles():         
-            self.Afile = openfile(self.Afn, create)
-            self.Bfile = openfile(self.Bfn, create)
-            self.Afile.writeat('SE', 0)
-            self.Bfile.writeat('SE', 0)
-      #mycontext['myLock'].release()
-        else: 
-            self.Afile = openfile(self.Afn, False)
-            self.Bfile = openfile(self.Bfn, False)
-    else: 
-        if self.Afn in listfiles() and self.Bfn in listfiles(): 
-            self.Afile = openfile(self.Afn, False)
-            self.Bfile = openfile(self.Bfn, False)
-
+        self.Afile = openfile(self.Afn, create)
+        self.Bfile = openfile(self.Bfn, create)
+        self.Afile.writeat('SE', 0)
+        #mycontext['myLock'].release()
+    self.Lock.release()
+        
+        #else: 
+        #   self.Afile = openfile(self.Afn, False)
+        #    self.Bfile = openfile(self.Bfn, False)
 
   def writeat(self,data,offset):
+    self.Lock.acquire(True)
     #if data[0] == 'S' and data[:-1] == 'E':
     #    raw_data = self.data
     #    r=''
@@ -56,11 +59,8 @@ class ABFile():
     #        r= ' ' * len(raw_data) - len(data))
     #    self.valid = True
     #    self.data = data
-    #    self.Bfile.writeat(data + r, offset)
-    #else: 
-    #    self.Bfile.writeat(' ' * len(self.data), offset)
-    # Write the requested data to the B file using the sandbox's writeat call
     self.Bfile.writeat(data, offset)
+    self.Lock.release()
   
   def readat(self,bytes,offset):
     # Read from the A file using the sandbox's readat...
@@ -70,27 +70,28 @@ class ABFile():
     #else: 
     #    self.valid = False
     return self.Afile.readat(bytes,offset)
-
-  def close(self):
-    #if self.valid == True: 
-    #    self.Afile.writeat(self.data, 0)
-    #    self.Afile.close()
-    #    mycontext['myLock'].release()
-    #    #discard textfile.txt.b after write
-    #    self.Bfile.writeat(' ' * len(self.data), 0)
-    #    self.Bfile.close()
-    #    mycontext['myLock'].release()
-    file = self.Bfile.readat(None, 0)
-    data = len(file)
-    first_char = file[0]
-    last_char = file[-1]
+    self.Lock.acquire(True)
+    ret = self.Afile.readat(bytes, offset)
+    self.Lock.release()
+    return ret 
     
-    try: 
+    def close(self):
+        l=len(self.Bfile.readat(None, 0))
+        first_char = self.Bfile.readat(1, 0)
+        last_char = self.Bfile.readat(1,(l-1))
+        self.Afile.close()
+        self.Bfile.close()
         if first_char == 'S' and last_char == 'E': 
-            self.Afile.writeat(file, 0)
-            self.Bfile.close()
+            removefile(self.Afn)
         else: 
-            self.Bfile.close()
+            removefile(self.Bfn)
+            
+    
+    #file = self.Bfile.readat(None, 0)
+    #data = len(file)
+    #first_char = file[0]
+    #last_char = file[-1]
+    
 
 def ABopenfile(filename, create):
   return ABFile(filename,create)
