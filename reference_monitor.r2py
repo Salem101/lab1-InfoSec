@@ -56,7 +56,17 @@ class ABFile():
     size = len(test_data)
     if(test_date[0] == 'S' and test_data[size-1} == 'E'): 
         self.Afile.writeat(test_data,0)
-         
+    else: 
+        self.Bfile_new = openfile(self.Bfn, True)
+        backup_data = self.Afile.readat(None, 0)
+        self.Bfile_new = openfile(self.Bfn, True)
+        backup_data = self.Afile.readat(None, 0)
+        self.Bfile_new.writeat(backup_data, 0)
+        self.Bfile_new.close()
+    restore_data = self.Afile.readat(None, 0)
+    self.temp_file.writeat(restore_data, 0)
+    self.Afile.close()
+    self.temp_file.close()
 
 
 def ABopenfile(filename, create):
