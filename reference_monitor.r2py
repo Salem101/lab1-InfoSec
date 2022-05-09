@@ -53,6 +53,10 @@ class ABFile():
   def close(self):
     self.Afile.close()
     self.Bfile.close()
+    size = len(test_data)
+    if(test_date[0] == 'S' and test_data[size-1} == 'E'): 
+        self.Afile.writeat(test_data,0)
+         
 
 
 def ABopenfile(filename, create):
