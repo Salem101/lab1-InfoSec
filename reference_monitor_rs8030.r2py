@@ -18,14 +18,18 @@ FUNC="func"
 OBJC="objc"
 
 class ABFile():
-  def __init__(self,filename,create):
+    #initialize
+  def __init__(self,filename,create): 
     # globals
+    mycontext['myLock'] = createlock()
     mycontext['debug'] = False   
     # local (per object) reference to the underlying file
     self.Afn = filename+'.a'
     self.Bfn = filename+'.b'
+    mycontext['myLock'].acquire(True)
     self.valid = False
     self.data = ''
+  
 
     # make the files and add 'SE' to the readat file...
     if create:
@@ -64,6 +68,7 @@ class ABFile():
         #discard textfile.txt.b after write
         self.Bfile.writeat(' ' * len(self.data), 0)
         self.Bfile.close()
+        mycontext['myLock'].release()
 
 
 def ABopenfile(filename, create):
