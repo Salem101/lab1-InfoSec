@@ -30,8 +30,8 @@ class ABFile():
     #self.valid = False
     #self.data = ''
   
-    self.Lock= createLock()
-    self.Lock.acquire(True)
+    #self.Lock= createLock()
+    #self.Lock.acquire(True)
     if self.Afn in listfiles():
         removefile(self.Afn)
     if self.Bfn in listfiles(): 
@@ -70,7 +70,7 @@ class ABFile():
     #else: 
     #    self.valid = False
     return self.Afile.readat(bytes,offset)
-    self.Lock.acquire(True)
+    #self.Lock.acquire(True)
     ret = self.Afile.readat(bytes, offset)
     #self.Lock.release()
     return ret 
